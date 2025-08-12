@@ -1,0 +1,47 @@
+# Configuração para treinamento com janela deslizante
+# folder path of dataset, which includes 2 subfolders: train_A/ and train_C/
+datasets_dir: ./data/ISTD/train
+valset_dir: ./data/ISTD/test
+train_list: train_list.txt
+test_list: 
+validation_list: val_list.txt
+out_dir: ./results_sliding_window
+
+cuda: True
+gpu_ids: [0]
+
+# Configurações da janela deslizante
+window_width: 640
+window_height: 480
+stride_width: 320   # 50% do tamanho da janela
+stride_height: 240  # 50% do tamanho da janela
+
+# Configurações de treinamento
+batchsize: 4
+validation_batchsize: 4
+epoch: 100
+threads: 4
+
+# Hiperparâmetros
+lr: 0.0004
+beta1: 0.5
+lamb: 100
+minimax: 1
+
+# Modelos pré-treinados (opcional)
+gen_init: 
+dis_init: 
+
+# Configurações do modelo
+in_ch: 3
+out_ch: 3
+
+manualSeed: 42
+snapshot_interval: 5
+
+# Configurações específicas para janela deslizante
+enable_data_augmentation: True
+random_crop: True
+horizontal_flip: True
+vertical_flip: False
+rotation_range: 10  # graus
