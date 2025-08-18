@@ -1,0 +1,53 @@
+# Configuração para treinamento com dataset_v9 (janelas 512x512)
+datasets_dir: /mnt/48EC7EE9EC7ED0A4/Teste_Sombra/dataset_v9/train
+valset_dir: /mnt/48EC7EE9EC7ED0A4/Teste_Sombra/dataset_v9/test
+train_list: train_list.txt
+test_list: 
+validation_list: val_list.txt
+out_dir: ./results_training_v9
+
+cuda: True
+gpu_ids: [0]
+
+# Configurações otimizadas para VRAM limitada com janelas 512x512
+batchsize: 1  # Batch size mínimo
+validation_batchsize: 1
+epoch: 100  # Mais épocas para dataset maior
+n_data: 1000  # Ajustar conforme o tamanho real do dataset
+
+# Tamanho da janela otimizado (mesmo do melhor resultado)
+window_width: 512   # Janela de 512x512 (melhor resultado)
+window_height: 512
+stride_width: 256    # 50% overlap
+stride_height: 256
+
+# Configurações de memória
+threads: 2
+lr: 0.0001  # Learning rate menor para fine-tuning
+beta1: 0.5
+lamb: 100
+minimax: 1
+
+# Modelo pré-treinado para fine-tuning
+gen_init: ./models/gen/gen_model_epoch_160.pth  # Carregar modelo existente
+dis_init: 
+in_ch: 3
+out_ch: 3
+
+manualSeed: 42
+snapshot_interval: 10  # Salvar a cada 10 épocas
+
+# Configurações específicas para treinamento
+enable_memory_optimization: True
+use_mixed_precision: True  # FP16 para economizar memória
+gradient_accumulation_steps: 4  # Acumular gradientes
+enable_gradient_checkpointing: True
+
+# Configurações de loss adaptativa
+lambda_whitening: 15  # Peso da penalização de branqueamento (aumentado)
+contrast_threshold: 30  # Threshold para baixo contraste
+shadow_threshold: 0.1  # Threshold para detectar sombras
+
+# Configurações específicas para dataset_v9
+dataset_version: "v9"
+window_size_optimized: True  # Usando janelas de 512x512

@@ -1,0 +1,58 @@
+# Configuração para treinamento com dataset_v9_pairs (otimizada para memória)
+datasets_dir: /mnt/48EC7EE9EC7ED0A4/Teste_Sombra/dataset_v9_pairs/train
+valset_dir: /mnt/48EC7EE9EC7ED0A4/Teste_Sombra/dataset_v9_pairs/test
+train_list: train_list.txt
+test_list: 
+validation_list: val_list.txt
+out_dir: ./results_training_v9_pairs_memory
+
+cuda: True
+gpu_ids: [0]
+
+# Configurações ULTRA otimizadas para VRAM limitada
+batchsize: 1  # Batch size mínimo
+validation_batchsize: 1
+epoch: 30  # Menos épocas para teste
+n_data: 500  # Ajustar conforme o tamanho real do dataset
+
+# Tamanho da janela REDUZIDO para economizar memória
+window_width: 256   # Janela menor (256x256 em vez de 512x512)
+window_height: 256
+stride_width: 128    # 50% overlap
+stride_height: 128
+
+# Configurações de memória
+threads: 1  # Menos threads
+lr: 0.0001  # Learning rate menor para fine-tuning
+beta1: 0.5
+lamb: 100
+minimax: 1
+
+# Modelo pré-treinado para fine-tuning
+gen_init: ./models/gen/gen_model_epoch_160.pth  # Carregar modelo existente
+dis_init: 
+in_ch: 3
+out_ch: 3
+
+manualSeed: 42
+snapshot_interval: 1  # Salvar a cada época
+
+# Configurações específicas para ECONOMIA DE MEMÓRIA
+enable_memory_optimization: True
+use_mixed_precision: False  # Desabilitado para evitar problemas com FFT
+gradient_accumulation_steps: 8  # Mais acumulação para simular batch maior
+enable_gradient_checkpointing: True
+enable_memory_cleanup: True  # Limpeza frequente de memória
+max_image_size: 1024  # Limitar tamanho máximo de imagem
+enable_memory_fragmentation_fix: True  # Corrigir fragmentação de memória
+
+# Configurações de loss adaptativa
+lambda_whitening: 15  # Peso da penalização de branqueamento
+contrast_threshold: 30  # Threshold para baixo contraste
+shadow_threshold: 0.1  # Threshold para detectar sombras
+
+# Configurações específicas para dataset_v9_pairs
+dataset_version: "v9_pairs_memory"
+window_size_optimized: True  # Usando janelas menores
+pairs_training: True  # Treinamento com pares correspondentes
+memory_optimized: True  # Modo otimizado para memória

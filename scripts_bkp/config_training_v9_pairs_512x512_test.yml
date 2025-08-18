@@ -1,0 +1,48 @@
+datasets_dir: /mnt/48EC7EE9EC7ED0A4/Teste_Sombra/dataset_v9_pairs_512x512/train
+valset_dir: /mnt/48EC7EE9EC7ED0A4/Teste_Sombra/dataset_v9_pairs_512x512/test
+train_list: train_list.txt
+validation_list: val_list.txt
+out_dir: ./results_v9_pairs_512x512_test256
+
+cuda: True
+gpu_ids: [0]
+threads: 1
+
+in_ch: 3
+out_ch: 3
+beta1: 0.5
+lamb: 100
+
+batchsize: 1
+validation_batchsize: 1
+epoch: 3
+snapshot_interval: 1
+validation_max_items: 5
+
+window_width: 256
+window_height: 256
+stride_width: 128
+stride_height: 128
+
+lr: 0.0001
+manualSeed: 42
+
+gen_init: ./models/gen/gen_model_epoch_160.pth
+
+enable_memory_optimization: True
+use_mixed_precision: False
+gradient_accumulation_steps: 1
+enable_gradient_checkpointing: True
+enable_memory_cleanup: True
+max_image_size: 1024
+enable_memory_fragmentation_fix: True
+
+lambda_whitening: 15
+contrast_threshold: 30
+shadow_threshold: 0.1
+
+dataset_version: "v9_pairs_512x512_test256"
+window_size_optimized: True
+pairs_training: True
+memory_optimized: True
+

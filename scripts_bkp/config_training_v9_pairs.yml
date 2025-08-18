@@ -1,0 +1,72 @@
+datasets_dir: /mnt/48EC7EE9EC7ED0A4/Teste_Sombra/dataset_v9_pairs/train
+valset_dir: /mnt/48EC7EE9EC7ED0A4/Teste_Sombra/dataset_v9_pairs/test
+train_list: train_list.txt
+validation_list: val_list.txt
+out_dir: ./results_quick_val
+
+cuda: True
+gpu_ids: [0]
+threads: 1
+
+in_ch: 3
+out_ch: 3
+width: 512
+height: 512
+
+gen_init: ./models/gen/gen_model_epoch_160.pth
+validation_max_items: 5
+snapshot_interval: 1
+# Configuração para treinamento com dataset_v9_pairs (pares correspondentes)
+datasets_dir: /mnt/48EC7EE9EC7ED0A4/Teste_Sombra/dataset_v9_pairs/train
+valset_dir: /mnt/48EC7EE9EC7ED0A4/Teste_Sombra/dataset_v9_pairs/test
+train_list: train_list.txt
+test_list: 
+validation_list: val_list.txt
+out_dir: ./results_training_v9_pairs
+
+cuda: True
+gpu_ids: [0]
+
+# Configurações otimizadas para VRAM limitada com janelas 512x512
+batchsize: 1  # Batch size mínimo
+validation_batchsize: 1
+epoch: 50  # Mais épocas para dataset de pares
+n_data: 500  # Ajustar conforme o tamanho real do dataset
+
+# Tamanho da janela otimizado (mesmo do melhor resultado)
+window_width: 512   # Janela de 512x512 (melhor resultado)
+window_height: 512
+stride_width: 256    # 50% overlap
+stride_height: 256
+
+# Configurações de memória
+threads: 2
+lr: 0.0001  # Learning rate menor para fine-tuning
+beta1: 0.5
+lamb: 100
+minimax: 1
+
+# Modelo pré-treinado para fine-tuning
+gen_init: ./models/gen/gen_model_epoch_160.pth  # Carregar modelo existente
+dis_init: 
+in_ch: 3
+out_ch: 3
+
+manualSeed: 42
+snapshot_interval: 10  # Salvar a cada 10 épocas
+
+# Configurações específicas para treinamento
+enable_memory_optimization: True
+use_mixed_precision: False  # Desabilitado para evitar problemas com FFT
+gradient_accumulation_steps: 4  # Acumular gradientes
+enable_gradient_checkpointing: True
+
+# Configurações de loss adaptativa
+lambda_whitening: 15  # Peso da penalização de branqueamento (aumentado)
+contrast_threshold: 30  # Threshold para baixo contraste
+shadow_threshold: 0.1  # Threshold para detectar sombras
+
+# Configurações específicas para dataset_v9_pairs
+dataset_version: "v9_pairs"
+window_size_optimized: True  # Usando janelas de 512x512
+pairs_training: True  # Treinamento com pares correspondentes

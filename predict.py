@@ -2,7 +2,6 @@ import numpy as np
 import argparse
 from tqdm import tqdm
 import yaml
-from attrdict import AttrMap
 
 import torch
 from torch.autograd import Variable
@@ -35,30 +34,30 @@ def predict(config, args):
             filename = batch[1][0]
             if args.cuda:
                 x = x.cuda()
-            
-            att , out = gen(x)
+
+            att, out = gen(x)
 
             h = 1
             w = 3
             c = 3
-            p = config.width
-            q = config.height
+            p = int(out.shape[2])
+            q = int(out.shape[3])
 
-            allim = np.zeros(( h, w, c, p, q))
-            x_ = x.cpu().numpy()[0]
-            out_ = out.cpu().numpy()[0]
+            allim = np.zeros((h, w, c, p, q))
+            x_ = x.detach().cpu().numpy()[0]
+            out_ = out.detach().cpu().numpy()[0]
             in_rgb = x_[:3]
             out_rgb = np.clip(out_[:3], 0, 1)
-            att_ = att.cpu().numpy()[0] * 255
+            att_ = att.detach().cpu().numpy()[0] * 255
             heat_att = heatmap(att_.astype('uint8'))
-      
+
             allim[0, 0, :] = in_rgb * 255
             allim[0, 1, :] = out_rgb * 255
             allim[0, 2, :] = heat_att
             allim = allim.transpose(0, 3, 1, 4, 2)
             allim = allim.reshape((h*p, w*q, c))
-            
-            save_image(args.out_dir, allim , i, 1, filename=filename)
+
+            save_image(args.out_dir, allim, i, 1, filename=filename)
 
             
             
@@ -77,7 +76,11 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     with open(args.config, 'r', encoding='UTF-8') as f:
-        config = yaml.safe_load(f)
-    config = AttrMap(config)
+        cfg = yaml.safe_load(f)
+    class SimpleConfig:
+        def __init__(self, d):
+            for k, v in d.items():
+                setattr(self, k, v)
+    config = SimpleConfig(cfg)
 
     predict(config, args)

@@ -59,6 +59,11 @@ class ValDataset(data.Dataset):
             np.savetxt(os.path.join(config.valset_dir, config.validation_list), np.array(val_list), fmt='%s')
 
         self.imlist = np.loadtxt(val_list_file, str)
+
+        # Limitar quantidade de imagens de validação, se configurado
+        max_items = getattr(config, 'validation_max_items', None)
+        if max_items is not None:
+            self.imlist = np.atleast_1d(self.imlist)[:int(max_items)]
         
         
 

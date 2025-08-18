@@ -1,0 +1,47 @@
+# Configuração otimizada para imagens panorâmicas 12288x6144
+datasets_dir: ./data/panoramic/train
+valset_dir: ./data/panoramic/test
+train_list: train_list.txt
+test_list: 
+validation_list: val_list.txt
+out_dir: ./results_panoramic
+
+cuda: True
+gpu_ids: [0]
+
+# Configurações otimizadas para memória - TESTE INICIAL
+batchsize: 1  # Batch size reduzido
+validation_batchsize: 1
+epoch: 10  # Reduzido para teste inicial
+n_data: 433
+
+# Tamanho da janela deslizante otimizado para RTX 4060 - BASEADO NOS TESTES
+window_width: 1024   # Máximo que funciona nos testes
+window_height: 1024
+stride_width: 512    # Overlap de 50%
+stride_height: 512
+
+# Configurações de memória
+threads: 2  # Menos threads para economizar RAM
+lr: 0.0002  # Learning rate menor para estabilidade
+beta1: 0.5
+lamb: 100
+minimax: 1
+
+gen_init: 
+dis_init: 
+in_ch: 3
+out_ch: 3
+
+manualSeed: 0
+snapshot_interval: 2  # Salvar mais frequentemente para teste
+
+# Configurações específicas para panorâmicas
+enable_memory_optimization: True
+use_mixed_precision: True  # FP16 para economizar memória
+gradient_accumulation_steps: 4  # Acumular gradientes
+enable_gradient_checkpointing: True  # Checkpointing para economizar memória
+
+# Configurações de teste
+test_mode: True  # Modo de teste
+save_intermediate_results: True  # Salvar resultados intermediários
